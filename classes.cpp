@@ -123,9 +123,7 @@ virtual istream& read(istream& in)
 int count;
 
 in >> count;
-
 for (int i = 0 ; i < count ; i ++)
-
 {
 
 T tmp;
@@ -162,7 +160,10 @@ T _default;
 
 public :
 
-
+zuzu()
+{
+    this->next = NULL;
+}
 
 zuzu(T def, T data)
 
@@ -174,6 +175,12 @@ this->_default = def;
 
 this->next = NULL;
 
+}
+
+virtual ~zuzu()
+{
+    if(next!=NULL)
+        delete next;
 }
 
 virtual T get(int index)
@@ -223,37 +230,51 @@ tmp->_data = data;
 }
 
 virtual void insert(int index, T data)
-
 {
-
 zuzu* a = new zuzu (_default, data);
-
 zuzu* tmp = this;
-
-for(int i = 0; i < index; i++)
-
+if(index == 0)
 {
-
-if(next!=NULL)
-
-tmp = tmp->next;
-
+    this->_data = a->_data;
+    //this->next = tmp;
+    tmp->next = this->next;
+    this->next = tmp;
+    delete a;
 }
-
-a->next = tmp->next;
-
-tmp->next = a;
-
-
-
+else
+{
+    for(int i = 0; i < index; i++)
+     {
+        if(next!=NULL)
+        tmp = tmp->next;
+     }
+    a->next = tmp->next;
+    tmp->next = a;
+}
 }
 
 virtual T remove(int index)
 
 {
 
+    if(len() == 0)
+    {
+       return this->_default;
+    }
 zuzu* tmp = this;
-
+if(index == 0)
+{
+    T str = this->_data;
+  this->_data = this->next->_data;
+   //this->next = this->next->next;
+  tmp = this->next->next;
+  this->next->next = NULL;
+  delete this->next;
+  this->next = tmp;
+  return str;
+}
+else
+{
 for(int i = 1; i < index; i++)
 
 {
@@ -270,26 +291,34 @@ T Str = del->_data;
 
 tmp->next = tmp->next->next;
 
+del->next = NULL;
+
 delete del;
 
 return Str;
 
 }
+}
+
+/*
+virtual zuzu* operator = (zuzu* a)
+{
+    this->_data = a->_data;
+    this->next = a->next;
+    this->_default = a->_default;
+    return this;
+}*/
 
 virtual int len()
 
 {
-
 int i=0;
-
 zuzu* tmp = this;
-
-while(tmp->next != 0)
-
-{
- i++;
- tmp = tmp->next;
-}
+while(tmp->next != NULL)
+    {
+     i++;
+     tmp = tmp->next;
+    }
  return i;
 }
 
@@ -382,19 +411,19 @@ return s;
 
 
 
-/*int main()
+int main()
 
 {
 
 AbstractList<string>* al = get_init();
 
 al->read(cin);
-
+al->remove(0);
 al->print(cout);
 
 return 0;
 
-}*/
+}
 
 
 
