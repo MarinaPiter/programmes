@@ -399,9 +399,9 @@ string d("Hello world!");
 
 zuzu<string>* s = new zuzu<string>(e, d);
 
-string test("test");
+//string test("test");
 
-s->set(0, test);
+//s->set(0, test);
 
 return s;
 
@@ -409,7 +409,7 @@ return s;
 
 
 
-
+/*
 
 int main()
 
@@ -427,3 +427,4 @@ return 0;
 
 
 
+*/

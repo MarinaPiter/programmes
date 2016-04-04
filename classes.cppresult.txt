@@ -1,0 +1,16 @@
+[==========] Running 7 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 7 tests from ListTest
+[ RUN      ] ListTest.ListLen
+[       OK ] ListTest.ListLen (0 ms)
+[ RUN      ] ListTest.DeleteOne
+[       OK ] ListTest.DeleteOne (0 ms)
+[ RUN      ] ListTest.AddOne
+[       OK ] ListTest.AddOne (0 ms)
+[ RUN      ] ListTest.AddAndCheckOne
+[       OK ] ListTest.AddAndCheckOne (0 ms)
+[ RUN      ] ListTest.PopOne
+[       OK ] ListTest.PopOne (0 ms)
+[ RUN      ] ListTest.PushPop
+FAIL
+Segmentation fault. Program terminated!
