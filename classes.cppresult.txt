@@ -16,5 +16,26 @@ Expected: "fail"
 [ RUN      ] ListTest.PopOne
 [       OK ] ListTest.PopOne
 [ RUN      ] ListTest.PushPop
-FAIL
-Segmentation fault. Program terminated!
+three--
+zero
+cur.cpp:76: Failure
+Value of: res
+  Actual: false
+Expected: true
+three
+[  FAILED  ] ListTest.PushPop
+[ RUN      ] ListTest.PushPop1E3
+cur.cpp:103: Failure
+Value of: res
+  Actual: false
+Expected: true
+[  FAILED  ] ListTest.PushPop1E3
+[----------] Global test environment tear-down
+[==========] 7 tests from 1 test case ran.
+[  PASSED  ] 4 tests.
+[  FAILED  ] 3 tests, listed below:
+[  FAILED  ] ListTest.AddAndCheckOne
+[  FAILED  ] ListTest.PushPop
+[  FAILED  ] ListTest.PushPop1E3
+
+ 3 FAILED TESTS
