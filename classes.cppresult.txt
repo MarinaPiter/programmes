@@ -22,3 +22,12 @@ cur.cpp:118: Failure
 Value of: l->pop().c_str()
   Actual: "Hello world!"
 Expected: "fail"
+[  FAILED  ] ListTest.PushPop1E3
+[----------] Global test environment tear-down
+[==========] 7 tests from 1 test case ran.
+[  PASSED  ] 5 tests.
+[  FAILED  ] 2 tests, listed below:
+[  FAILED  ] ListTest.PushPop
+[  FAILED  ] ListTest.PushPop1E3
+
+ 2 FAILED TESTS
