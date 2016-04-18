@@ -4,7 +4,7 @@
 [ RUN      ] ListTest.ListLen
 [       OK ] ListTest.ListLen
 [ RUN      ] ListTest.DeleteOne
-test    EMPTY![       OK ] ListTest.DeleteOne
+[       OK ] ListTest.DeleteOne
 [ RUN      ] ListTest.AddOne
 [       OK ] ListTest.AddOne
 [ RUN      ] ListTest.AddAndCheckOne
