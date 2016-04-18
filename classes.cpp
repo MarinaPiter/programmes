@@ -255,10 +255,10 @@ else
 
 virtual T remove(int index)
 
-{
+{cout<<"1";
 
     if(len() == 0)
-    {
+    {  
        return this->_default;
     }
 zuzu* tmp = this;
@@ -271,33 +271,33 @@ if(index == 0)
   this->next->next = NULL;
   delete this->next;
   this->next = tmp;
-  return str;
+  return _default;
 }
 else
 {
-for(int i = 1; i <= index; i++)
+for(int i = 1; i < index; i++)
 
 {
 
-    if(tmp->next != NULL)
+if(tmp->next != NULL)
 
-    tmp = tmp->next;
+tmp = tmp->next;
 
-    }
+}
 
-        zuzu* del = tmp->next;
+zuzu* del = tmp->next;
 
-        T Str = del->_data;
+T Str = del->_data;
 
-        tmp->next = tmp->next->next;
+tmp->next = tmp->next->next;
 
-        del->next = NULL;
+del->next = NULL;
 
-        delete del;
+delete del;
 
-        return Str;
+return Str;
 
-    }
+}
 }
 
 /*
@@ -406,5 +406,9 @@ s->set(0, test);
 return s;
 
 }
+
+
+
+
 
 
