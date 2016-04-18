@@ -67,7 +67,7 @@ public:
     void push(T data)
  
     {
-       cout<<"1";
+      
         insert(0, data);
  
     }
