@@ -255,7 +255,7 @@ else
 
 virtual T remove(int index)
 
-{cout<<this->_data<<"    "<<this->_default;
+{
 
     if(len() == 0)
     {
@@ -406,28 +406,5 @@ s->set(0, test);
 return s;
 
 }
-
-
-
-
-/*
-int main()
-
-{
-
-AbstractList<string>* al = get_init();
-while(true)
-{
-    al->push("example");
-    al->pop();
-}
-al->read(cin);
-al->remove(0);
-al->print(cout);
-
-return 0;
-
-}
-*/
 
 
