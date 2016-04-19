@@ -1,0 +1,357 @@
+
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+class AbstractMatrix
+{
+protected:
+    int n;
+    int m;
+    float* data;
+public:
+
+    AbstractMatrix();
+    AbstractMatrix(int m, int n);
+    virtual AbstractMatrix& operator-(AbstractMatrix&) = 0;
+    virtual AbstractMatrix& operator+(AbstractMatrix&) = 0;
+    virtual AbstractMatrix& operator*(AbstractMatrix&) = 0;
+    virtual AbstractMatrix& operator*(float&) = 0;
+    virtual AbstractMatrix& transpose() = 0;
+    virtual float determinant() = 0;
+    virtual AbstractMatrix& reverse() = 0;
+    virtual ostream& print(ostream& o) = 0;
+    virtual istream& read(istream& o) = 0;
+    virtual bool failed() = 0;
+    virtual void set(int i, int j, float data) = 0;
+    virtual float get(int i, int j) = 0;
+    virtual int getN() = 0;
+    virtual int getM() = 0;
+};
+
+AbstractMatrix* get_init()
+{
+    return NULL;
+}
+class u : public AbstractMatrix
+{
+public:
+    int n, m; float* data;
+    u()
+    {
+        n = 0; m = 0; data = NULL;
+    }
+    u(int y)
+    {
+        n = 0; m = 0; data = NULL;
+    }
+    u(int i, int j)
+    {
+        n = i; m = j;
+        float* dat = new float[n*m]; ////
+        data = dat;
+    }
+    u(int i, int j, float* q)
+    {
+        n = i; m = j;
+        int w = n*m;
+        float* dat = new float[w];
+        data = dat;
+        for (int i = 0; i < w; i++)
+            dat[i] = q[i];
+    }
+    int getN() { return n; }
+    int getM() { return m; }
+    float get(int i, int j) { return data[i*n + j]; }
+
+    ~u()
+    {
+        delete data;
+    }
+
+    u(const u& q)
+    {
+        n = q.n; m = q.m;
+        data = new float[n*m];
+        for (int i = 0; i < n*m; i++)
+            data[i] = q.data[i];
+    }
+   
+    void set(int i, int j, float dat)
+    {
+        data[i*n + j] = dat; return;
+    }
+
+    AbstractMatrix& operator+(AbstractMatrix& q)
+    {
+        if ((q.getN() != n) || (q.getM() != m))
+            {u w(1); return u(w);}
+        u w(n, m);
+        for (int i = 0; i < n*m; i++)
+            w.data[i] = get(0, i) + data[i];
+        return u(w);
+    }
+    AbstractMatrix& operator-(AbstractMatrix& q)
+    {
+        if ((q.getN() != n) || (q.getM() != m))
+            {u w(1); return u(w);}
+        u w(n, m);
+        for (int i = 0; i < n*m; i++)
+            w.data[i] = data[i] - get(0, i);
+        return u(w);
+    }
+    AbstractMatrix& operator*(AbstractMatrix& q)
+    {
+        if (getM() != n) { u* Q=new u(); return *Q; }
+        u w(getN(), m);
+        for (int i = 0; i < getN(); i++)
+            for (int j = 0; j < m; j++)
+                for (int k = 1; k <= n; k++)
+                    w.data[i*n + j] = get(i, k)*data[k*n + j];
+        return u(w);
+    }
+
+    AbstractMatrix& operator*(float& q)
+    {
+        u w(n, m);
+        for (int i = 0; i <= n*m; i++)
+            w.data[i] = data[i] * q;
+        return u(w);
+    }
+
+    AbstractMatrix& transpose()
+    {
+        float s;
+        float* tmp = new float[n*m];
+        u r (1);
+        r.n = n; r.m = m;
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
+                tmp[j*n + i] = data[i*n + j];
+        r.data = tmp;
+        return u(r);
+    }
+
+    float det(int z, int x, bool* a)
+    {
+        if (z >= m)
+            return 1;
+        int sgn = 1; float pmt = 0;
+        while (x < m)
+        {
+            while (a[x])
+                x++; sgn = sgn*(-1);
+            a[x] = true;
+            sgn = sgn*(-1);
+            pmt = pmt + data[z*n + x] * det(z + 1, 0, a)*sgn;
+            a[x] = false; x++;
+            sgn = sgn*(-1);
+            if (z == m - 1)
+                return pmt;
+        }
+        return pmt;
+    }
+
+    virtual float olddeterminant()
+    {
+        if (n != m)
+        {
+            return NULL;
+        }
+        int z = 0, x = 0;
+        bool* a = new bool[m];
+        for (int i = 0; i < m; i++)
+            a[i] = false;
+        float t = det(x, z, a);
+        delete a;
+        return t;
+    }
+    AbstractMatrix& gauss()
+    {
+        if (n != m)
+        {
+            u q(1);
+            return u(q);
+        }
+        float * tmp = new float[n*m];
+        for (int i = 0; i < m*n; i++)
+            tmp[i] = data[i];
+        u r(1);
+        r.m = m; r.n = n;
+        float T; int b, z;
+        for (int k = 0; k < n - 1; k++)
+        {
+            if (tmp[k *n + k] == 0)
+            {
+                z = k + 1;
+            first:
+                if (tmp[z*n + k] == 0)
+                {
+                    if (z == n - k)
+                        goto second;
+                    z++;
+                    goto first;
+                }
+                for (int i = 0; i < n; i++)
+                {
+                    b = tmp[k*n + i];
+                    tmp[k*n + i] = -tmp[z*n + i];
+                    tmp[z*n + i] = b;
+                }
+            }
+            for (int i = k + 1; i < n; i++)
+            {
+                T = tmp[i*n + k];
+                for (int j = k; j < m; j++)
+                    tmp[i*n + j] -= (tmp[k*n + j] * T) / tmp[k *n + k];
+            }
+            second:
+        }
+        r.data = tmp;
+        return u(r);
+    }
+    float determinant()
+    {
+        float * tmp = new float[n*m];
+        for (int i = 0; i < m*n; i++)
+            tmp[i] = data[i];
+        float T, op = 1, b;
+        int z;
+        for (int k = 0; k < n - 1; k++)
+        {
+            if (tmp[k *n + k] == 0)
+            {
+                z = k + 1;
+            first:
+                if (tmp[z*n + k] == 0)
+                {
+                    if (z == n - k)
+                        return 0;
+                    z++;
+                    goto first;
+                }
+                for (int i = 0; i < n; i++)
+                {
+                    b = tmp[k*n + i];
+                    tmp[k*n + i] = -tmp[z*n + i];
+                    tmp[z*n + i] = b;
+                }
+            }
+            for (int i = k + 1; i < n; i++)
+            {
+                T = tmp[i*n + k];
+                for (int j = k; j < m; j++)
+                    tmp[i*n + j] -= (tmp[k*n + j] * T) / tmp[k *n + k];
+            }
+            op *= tmp[k*n + k];
+        }
+        op *= tmp[n*m - 1];
+        delete tmp;
+        return op;
+    }
+    float minorgauss(int p, int l)
+    {
+        int mm = m - 1, nn = n - 1, g = 0;
+        float * tmp = new float[nn*mm];
+        for (int k = 0; k < m; k++)
+        {
+            if (k == p) k++;
+            if (k == n) break;
+            for (int j = 0; j < n; j++)
+            {
+                if (j == l) j++;
+                if (j == n) break;
+                tmp[g] = data[k*n + j];
+                g++;
+            }
+        }
+        float T, op = 1, b; int z = 0;
+        for (int k = 0; k < nn - 1; k++)
+        {
+            if (tmp[k *nn + k] == 0)
+            {
+                z = k+1;
+            first:
+                if (tmp[z*nn + k] == 0)
+                {
+                    if (z == nn - k)
+                        return 0;
+                    z++;
+                    goto first;
+                }
+                for (int i = 0; i < nn ; i++)
+                {
+                    b = tmp[k*nn + i];
+                    tmp[k*nn + i] = -tmp[z*nn + i];
+                    tmp[z*nn + i] = b;
+                }
+            }
+            for (int i = k + 1; i < nn; i++)
+            {
+                T = tmp[i*nn + k];
+                for (int j = k; j < mm; j++)
+                    tmp[i*nn + j] -= (tmp[k*nn + j] * T) / tmp[k *nn + k];
+            }
+            op *= tmp[k*nn + k];
+        }
+        //cout << tmp[nn*mm-1];
+        op *= tmp[nn*mm-1];
+        delete[] tmp;
+        return op;
+    }
+    bool failed() //???????
+    {
+        return (data == NULL);
+    }
+    AbstractMatrix& reverse()
+    {
+        if (n != m)
+        {
+            u q(1);
+            return u(q);
+        }
+        if (n == 1)
+        {
+            u q (n,m);
+            q.data[0] = 1 / data[0];
+            return u(q);
+        }
+        int sgn = 1; float DET = determinant();
+        u q(n, m);
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < m; j++)
+            {
+                q.data[j*n + i] = minorgauss(i, j)*sgn / DET;
+                sgn = sgn*-1;
+            }
+            if (n % 2 == 0)
+            sgn = sgn*-1;
+        }
+        return u(q);
+    }
+    ostream& print(ostream& o)
+    {
+        for (int i = 0; i < m*n; i++)
+        {
+            if (i%n == 0)
+                o << endl;
+            o << data[i] << '\t';
+        }
+        cout << endl;
+        return o;
+    }
+    istream& read(istream& o)
+    {
+        delete data;
+        o >> m >> n;
+        float* d = new float[m*n];
+        data = d;
+        for (int i = 0; i < m*n; i++)
+        {
+            o >> data[i];
+        }
+        return o;
+    }
+
+};
