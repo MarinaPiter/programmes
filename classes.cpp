@@ -182,7 +182,7 @@ public:
         if (next != NULL)
             delete next;
     }
- 
+
    
     virtual T get(int index)
  
