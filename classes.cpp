@@ -301,7 +301,6 @@ public:
 		this->_data = a->_data;
 		this->next = a->next;
 		this->_default = a->_default;
-		return this;
 	}
 
 	virtual int len()
