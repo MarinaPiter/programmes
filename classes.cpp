@@ -181,9 +181,7 @@ public:
 	{
 		if (next != NULL)
 		{
-			zuzu *tmp = next;
-			next = next->next;
-			delete tmp;
+			delete next;
 		}
 	}
 
