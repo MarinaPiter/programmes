@@ -294,12 +294,22 @@ public:
 	}*/
 	
 	zuzu(const zuzu& a)
-	{
-		//zuzu* tmp = new zuzu;
-		this->_data = a->_data;
-		this->next = a->next;
-		this->_default = a->_default;
-	}
+	{     
+		zuzu *tmp1 = new zuzu();
+	        while(a->next != NULL)
+	      {
+	      	zuzu *tmp = new zuzu();
+		tmp->_data = a._data;
+		tmp->next = NULL;
+		tmp->_default = a._default;
+		tmp1->next=tmp; 
+                tmp1 = tmp1->next; 
+                a->next = a->next->next; 
+              } 
+                this = tmp1;
+	 }
+	     
+	
 
 	virtual int len()
 
